@@ -54,18 +54,31 @@
       object-fit: cover;
     }
 
-    .envelope-open, .envelope-flap {
+    .envelope-open, .envelope-flap-container {
       position: absolute;
       width: 100%;
       height: 100%;
     }
 
-    .envelope-flap {
+    .envelope-flap-container {
       transform-origin: top center;
       transition: transform 1s ease;
+      transform-style: preserve-3d;
     }
 
-    .envelope-flap.open {
+    .envelope-flap-container.open {
+      transform: rotateX(180deg);
+    }
+
+    .envelope-flap-front, .envelope-flap-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+    }
+
+    .envelope-flap-back {
       transform: rotateX(180deg);
     }
   </style>
@@ -82,8 +95,13 @@
         <div class="envelope-open">
           <img src="./assets/envelope-open.png" alt="Envelope Open">
         </div>
-        <div class="envelope-flap">
-          <img src="./assets/envelope-flap-closed.png" alt="Envelope Flap">
+        <div class="envelope-flap-container">
+          <div class="envelope-flap-front">
+            <img src="./assets/envelope-flap-closed.png" alt="Envelope Flap Closed">
+          </div>
+          <div class="envelope-flap-back">
+            <img src="./assets/envelope-flap-open.png" alt="Envelope Flap Open">
+          </div>
         </div>
       </div>
     </div>
@@ -91,17 +109,17 @@
 
   <script>
     window.addEventListener('load', function() {
-      const flipCard = document.querySelector('.envelope');
-      const envelopeFlap = document.querySelector('.envelope-flap');
+      const envelope = document.querySelector('.envelope');
+      const envelopeFlap = document.querySelector('.envelope-flap-container');
 
       // Step 1: Flip the envelope after 2 seconds
       setTimeout(function() {
-        flipCard.classList.add('flipped');
+        envelope.classList.add('flipped');
       }, 2000);
 
       // Step 2: Open the envelope flap after the flip is complete
-      flipCard.addEventListener('transitionend', function(e) {
-        if (e.propertyName === 'transform' && flipCard.classList.contains('flipped')) {
+      envelope.addEventListener('transitionend', function(e) {
+        if (e.propertyName === 'transform' && envelope.classList.contains('flipped')) {
           setTimeout(function() {
             envelopeFlap.classList.add('open');
           }, 500); // Small delay for better visual effect
