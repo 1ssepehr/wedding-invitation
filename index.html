@@ -22,7 +22,7 @@
       perspective: 4000px;
     }
 
-    .envelope-inner {
+    .envelope-container {
       position: relative;
       width: 100%;
       height: 100%;
@@ -32,11 +32,11 @@
       box-shadow: 0 12px 20px 0 rgba(0, 0, 0, 0.4);
     }
 
-    .envelope.flipped .envelope-inner {
+    .envelope.flipped .envelope-container {
       transform: rotateY(180deg);
     }
 
-    .envelope-front, .envelope-back {
+    .envelope-back, .envelope-front {
       position: absolute;
       width: 100%;
       height: 100%;
@@ -44,11 +44,11 @@
       backface-visibility: hidden;
     }
 
-    .envelope-back {
+    .envelope-front {
       transform: rotateY(180deg);
     }
 
-    .envelope-front img, .envelope-back img {
+    .envelope-back img, .envelope-front img {
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -56,8 +56,6 @@
 
     .envelope-open, .envelope-flap {
       position: absolute;
-      top: 0;
-      left: 0;
       width: 100%;
       height: 100%;
     }
@@ -76,11 +74,11 @@
 <body>
 
   <div class="envelope">
-    <div class="envelope-inner">
-      <div class="envelope-front">
-        <img src="./assets/envelope.png" alt="Envelope Back">
-      </div>
+    <div class="envelope-container">
       <div class="envelope-back">
+        <img src="./assets/envelope-back.png" alt="Envelope Back">
+      </div>
+      <div class="envelope-front">
         <div class="envelope-open">
           <img src="./assets/envelope-open.png" alt="Envelope Open">
         </div>
