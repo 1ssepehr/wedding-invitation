@@ -4,6 +4,43 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
+        .sparkle {
+            position: absolute;
+            width: 15px;
+            /* Increased size */
+            height: 15px;
+            /* Increased size */
+            border-radius: 50%;
+            background-image: radial-gradient(circle closest-side, rgba(255, 255, 255, 0.8) 70%, transparent 100%);
+            /* Default light color with transparency */
+            opacity: 0;
+            pointer-events: none;
+            animation: sparkle 1.5s ease-in-out infinite;
+        }
+
+        @keyframes sparkle {
+            0% {
+                opacity: 0;
+                transform: scale(0);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: scale(0);
+            }
+        }
+
+        /* rotate the image in 1 seconds  */
+        img[alt="Invitation"].rotated {
+            transition: transform 1s;
+            transform: rotate(90deg);
+        }
+
         body {
             font-family: Arial, Helvetica, sans-serif;
             background-image: url("./assets/background.jpg");
@@ -27,7 +64,7 @@
             width: 100%;
             height: 100%;
             text-align: center;
-            transition: transform 1.5s;
+            transition: transform 2.5s;
             transform-style: preserve-3d;
             box-shadow: 0 12px 20px 0 rgba(0, 0, 0, 0.4);
         }
@@ -65,7 +102,7 @@
 
         .envelope-flap-container {
             transform-origin: top center;
-            transition: transform 1s ease;
+            transition: transform 2s ease;
             transform-style: preserve-3d;
         }
 
@@ -99,6 +136,7 @@
             width: 100%;
             height: 100%;
         }
+
         .stacked-images img {
             position: absolute;
             top: 0;
@@ -145,16 +183,89 @@
             // Step 1: Flip the envelope after 2 seconds
             setTimeout(function () {
                 envelope.classList.add('flipped');
-            }, 2000);
+            }, 3000);
 
             // Step 2: Open the envelope flap after the flip is complete
             envelope.addEventListener('transitionend', function (e) {
                 if (e.propertyName === 'transform' && envelope.classList.contains('flipped')) {
                     setTimeout(function () {
                         envelopeFlap.classList.add('open');
+
+                        // Step 3: Hide non-invitation images after the flap is open
+                        envelopeFlap.addEventListener('transitionend', function (e) {
+                            if (e.propertyName === 'transform' && envelopeFlap.classList.contains('open')) {
+                                setTimeout(fadeOutNonInvitationImages(), 500);
+                            }
+                        }, { once: true });
                     }, 500); // Small delay for better visual effect
                 }
             });
+
+            function fadeOutNonInvitationImages(duration = 1200) {
+                const images = document.querySelectorAll('img:not([alt="Invitation"])');
+                images.forEach(img => {
+                    img.style.transition = `opacity ${duration}ms ease-out`;
+                    img.style.opacity = '0';
+                });
+
+                // Remove the images from the layout after they've faded out
+                setTimeout(() => {
+                    images.forEach(img => {
+                        img.style.display = 'none';
+                    });
+                }, 1200);
+                // remove shadow from envelope-container after the images are removed, with transition
+                setTimeout(() => {
+                    document.querySelector('.envelope-container').style.transition = 'box-shadow 1s ease-out';
+                    document.querySelector('.envelope-container').style.boxShadow = 'none';
+                }, 0);
+
+                setTimeout(() => {
+                    const invitation = document.querySelector('img[alt="Invitation"]');
+                    invitation.classList.add('rotated');
+                    invitation.addEventListener('transitionend', function (e) {
+                        if (e.propertyName === 'transform') {
+                            startGlitterEffect(invitation);
+                        }
+                    }, { once: true });
+                }, 1100);
+            }
+
+            // Add sparkle effect
+            function startGlitterEffect(element) {
+                const rect = element.getBoundingClientRect();
+                const sparkleCount = 150; // Adjust for more or fewer sparkles
+
+                function createSparkle() {
+                    const sparkle = document.createElement('div');
+                    sparkle.className = 'sparkle';
+                    sparkle.style.left = Math.random() * rect.width + 'px';
+                    sparkle.style.top = Math.random() * rect.height + 'px';
+                    sparkle.style.backgroundColor = getRandomLightColor();
+                    sparkle.style.opacity = Math.random() * 0.5 + 0.5; // Opacity between 0.5 and 1.0
+
+                    element.parentNode.appendChild(sparkle);
+
+                    setTimeout(() => {
+                        sparkle.remove();
+                    }, 1500); // Remove sparkle after animation completes
+                }
+
+                function getRandomLightColor() {
+                    const colors = ['#FFC0CB', '#FFD700', '#ADD8E6', '#90EE90', '#FFB6C1']; // Light shades of pink, gold, blue, green, light pink
+                    return colors[Math.floor(Math.random() * colors.length)];
+                }
+
+                // Create initial set of sparkles
+                for (let i = 0; i < sparkleCount; i++) {
+                    setTimeout(createSparkle, Math.random() * 1500);
+                }
+
+                // Continue adding sparkles
+                setInterval(() => {
+                    createSparkle();
+                }, 200); // Adjust timing for more or fewer sparkles
+            }
         });
     </script>
 
