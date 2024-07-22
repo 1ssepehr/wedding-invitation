@@ -8,7 +8,7 @@ window.addEventListener('load', () => {
     // Handle transitions and open the envelope flap
     envelope.addEventListener('transitionend', (e) => {
         if (e.propertyName === 'transform' && envelope.classList.contains('flipped')) {
-            setTimeout(() => openEnvelopeFlap(), 500);
+            setTimeout(() => openEnvelopeFlap(), 200);
         }
     });
 
@@ -18,25 +18,34 @@ window.addEventListener('load', () => {
         // Fade out non-invitation images after the flap is open
         envelopeFlap.addEventListener('transitionend', (e) => {
             if (e.propertyName === 'transform' && envelopeFlap.classList.contains('open')) {
-                fadeOutNonInvitationImages();
+                applyZIndexToImages();
+                moveOutEnvelope();
             }
         }, { once: true });
     };
 
-    const fadeOutNonInvitationImages = () => {
-        const images = document.querySelectorAll('img:not([alt="Invitation"])');
+    const moveOutEnvelope = () => {
+        const images = document.querySelectorAll('img:not([class="invitation"])');
         images.forEach(img => {
-            img.style.transition = 'opacity 1200ms ease-out';
-            img.style.opacity = '0';
+            img.style.transition = 'transform 2s ease-in, box-shadow 1s ease-out';
+            img.style.transform = 'translateY(250%)';
         });
 
-        setTimeout(() => images.forEach(img => img.style.display = 'none'), 1200);
         removeShadowFromEnvelopeContainer();
         setTimeout(() => {
             rotateInvitationImage();
-        }, 1500);
+        }, 2500);
 
     };
+
+    const applyZIndexToImages = () => {
+        const throat = document.querySelector('img[class="throat"]');
+        const invitation = document.querySelector('img[class="invitation"]');
+        const envbody = document.querySelector('img[class="env-body"]');
+        throat.style.zIndex = '1';
+        invitation.style.zIndex = '2';
+        envbody.style.zIndex = '3';
+    }
 
     const removeShadowFromEnvelopeContainer = () => {
         const envelopeContainer = document.querySelector('.envelope-container');
@@ -45,8 +54,16 @@ window.addEventListener('load', () => {
     };
 
     const rotateInvitationImage = () => {
-        const invitation = document.querySelector('img[alt="Invitation"]');
-        invitation.style.transition = 'transform 1s';
-        invitation.style.transform = 'rotate(90deg)';
+        const invitation = document.querySelector('img.invitation');
+        invitation.style.transformOrigin = 'center center';
+        invitation.style.transition = 'transform 1.5s, top 1.5s';
+        invitation.style.transform = 'rotate(90deg) scale(1.5)';
+        invitation.style.top = '-30%';
     };
+
+    const zoomIntoInvitation = () => {
+        const invitation = document.querySelector('img.invitation');
+        invitation.style.transition = 'transform 2s';
+        invitation.style.transform = 'scale(1.5)';
+    }
 });
