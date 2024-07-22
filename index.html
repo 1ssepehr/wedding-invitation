@@ -4,36 +4,6 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        .sparkle {
-            position: absolute;
-            width: 15px;
-            /* Increased size */
-            height: 15px;
-            /* Increased size */
-            border-radius: 50%;
-            background-image: radial-gradient(circle closest-side, rgba(255, 255, 255, 0.8) 70%, transparent 100%);
-            /* Default light color with transparency */
-            opacity: 0;
-            pointer-events: none;
-            animation: sparkle 1.5s ease-in-out infinite;
-        }
-
-        @keyframes sparkle {
-            0% {
-                opacity: 0;
-                transform: scale(0);
-            }
-
-            50% {
-                opacity: 1;
-                transform: scale(1);
-            }
-
-            100% {
-                opacity: 0;
-                transform: scale(0);
-            }
-        }
 
         /* rotate the image in 1 seconds  */
         img[alt="Invitation"].rotated {
@@ -47,15 +17,15 @@
             background-size: cover;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: end;
             height: 100vh;
-            margin: 0;
         }
 
         .envelope {
             background-color: transparent;
-            width: 80vw;
-            height: calc(80vw / 1024 * 732);
+            width: 60vw;
+            margin-bottom: 10vh;
+            height: calc(60vw / 1024 * 732);
             perspective: 4000px;
         }
 
@@ -223,48 +193,7 @@
                 setTimeout(() => {
                     const invitation = document.querySelector('img[alt="Invitation"]');
                     invitation.classList.add('rotated');
-                    invitation.addEventListener('transitionend', function (e) {
-                        if (e.propertyName === 'transform') {
-                            startGlitterEffect(invitation);
-                        }
-                    }, { once: true });
                 }, 1100);
-            }
-
-            // Add sparkle effect
-            function startGlitterEffect(element) {
-                const rect = element.getBoundingClientRect();
-                const sparkleCount = 150; // Adjust for more or fewer sparkles
-
-                function createSparkle() {
-                    const sparkle = document.createElement('div');
-                    sparkle.className = 'sparkle';
-                    sparkle.style.left = Math.random() * rect.width + 'px';
-                    sparkle.style.top = Math.random() * rect.height + 'px';
-                    sparkle.style.backgroundColor = getRandomLightColor();
-                    sparkle.style.opacity = Math.random() * 0.5 + 0.5; // Opacity between 0.5 and 1.0
-
-                    element.parentNode.appendChild(sparkle);
-
-                    setTimeout(() => {
-                        sparkle.remove();
-                    }, 1500); // Remove sparkle after animation completes
-                }
-
-                function getRandomLightColor() {
-                    const colors = ['#FFC0CB', '#FFD700', '#ADD8E6', '#90EE90', '#FFB6C1']; // Light shades of pink, gold, blue, green, light pink
-                    return colors[Math.floor(Math.random() * colors.length)];
-                }
-
-                // Create initial set of sparkles
-                for (let i = 0; i < sparkleCount; i++) {
-                    setTimeout(createSparkle, Math.random() * 1500);
-                }
-
-                // Continue adding sparkles
-                setInterval(() => {
-                    createSparkle();
-                }, 200); // Adjust timing for more or fewer sparkles
             }
         });
     </script>
