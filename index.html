@@ -5,13 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="script.js"></script>
     <style>
-
-        /* rotate the image in 1 seconds  */
-        img[alt="Invitation"].rotated {
-            transition: transform 1s;
-            transform: rotate(90deg);
-        }
-
         body {
             font-family: Arial, Helvetica, sans-serif;
             background-image: url("./assets/background.jpg");
@@ -20,6 +13,7 @@
             justify-content: center;
             align-items: end;
             height: 100vh;
+            overflow: hidden;
         }
 
         .envelope {
@@ -28,6 +22,7 @@
             margin-bottom: 10vh;
             height: calc(60vw / 1024 * 732);
             perspective: 4000px;
+            position: relative;
         }
 
         .envelope-container {
@@ -145,7 +140,6 @@
             </div>
         </div>
     </div>
-
 </body>
 
 </html>
